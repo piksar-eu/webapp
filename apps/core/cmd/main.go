@@ -4,20 +4,24 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
+
+	_ "github.com/piksar-eu/webapp/apps/core/pkg/envloader"
+	"github.com/piksar-eu/webapp/apps/core/pkg/migrations"
 )
 
+func init() {
+	migrations.Migrate()
+}
+
 func main() {
-	port := 8080
+	apiPort, _ := strconv.Atoi(os.Getenv("API_PORT"))
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /test", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Hello World!"))
-	})
-
-	log.Printf("Serve app on port %d", port)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
+	log.Printf("Serve app on port %d", apiPort)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", apiPort), mux)
 
 	if err != nil {
 		panic(err)
