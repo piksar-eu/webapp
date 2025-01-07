@@ -1,8 +1,6 @@
 package migrations
 
 import (
-	"log"
-
 	"github.com/piksar-eu/webapp/apps/core/pkg/di"
 )
 
@@ -22,8 +20,6 @@ func m202501041719_init() Migration {
 			if err != nil {
 				panic(err)
 			}
-
-			log.Println("Created migration log table")
 
 			return nil
 		},

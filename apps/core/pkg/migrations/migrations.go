@@ -36,7 +36,6 @@ func migrations() []Migration {
 }
 
 func migrationLog() []string {
-
 	db := di.NewDb()
 
 	rows, err := db.Query("SELECT name FROM core__migration_log WHERE err IS NULL")
@@ -74,6 +73,8 @@ func logMigration(name string) {
 	if err != nil {
 		panic(err)
 	}
+
+	log.Printf("Migrated %s", name)
 }
 
 func logMigrationError(name string, migrationErr error) {
