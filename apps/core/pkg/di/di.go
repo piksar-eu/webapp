@@ -6,10 +6,13 @@ import (
 	"os"
 
 	_ "github.com/lib/pq"
+	"github.com/piksar-eu/webapp/apps/core/pkg/easyconnect"
+	"github.com/piksar-eu/webapp/apps/core/pkg/infrastructure"
 )
 
 var services = struct {
-	DB *sql.DB
+	DB             *sql.DB
+	LeadRepository easyconnect.LeadRepository
 }{}
 
 func NewDb() *sql.DB {
@@ -24,4 +27,12 @@ func NewDb() *sql.DB {
 	}
 
 	return services.DB
+}
+
+func NewLeadRepository() easyconnect.LeadRepository {
+	if services.LeadRepository == nil {
+		services.LeadRepository = infrastructure.NewPgEasyConnectLeadRepository(NewDb())
+	}
+
+	return services.LeadRepository
 }
