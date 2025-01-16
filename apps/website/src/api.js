@@ -1,5 +1,5 @@
 export const subscribe = async (email) => {
-    const res = await fetch(`http://localhost:8080/api/easyconnect/subscribe`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/easyconnect/subscribe`, {
         credentials: "include",
         method: 'POST',
         headers: {

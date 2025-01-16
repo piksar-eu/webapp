@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "node server",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "vite build --outDir dist/client",
-    "build:server": "vite build --ssr src/entry-server.js --outDir dist/server",
+    "build:client": "vite build --emptyOutDir --outDir=../../${WEBSITE_DIST_DIR:-apps/website/dist}/client",
+    "build:server": "vite build -c vite.config.server.js --emptyOutDir --ssr src/entry-server.js --outDir=../../${WEBSITE_DIST_DIR:-apps/website/dist}/server",
     "preview": "cross-env NODE_ENV=production node server"
   },
   "dependencies": {

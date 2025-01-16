@@ -2,28 +2,31 @@ WEBSITE_DIR := ./apps/website
 CORE_DIR := ./apps/core
 CORE_MAIN_FILE := cmd/main.go
 OUTPUT_DIR := dist
-OUTPUT_BINARY := $(OUTPUT_DIR)/core
 
 .PHONY: clean
 
-all: build_website build_core
+all: core_build
 
-run_website:
+website_install: $(WEBSITE_DIR)/package.json
+	cd $(WEBSITE_DIR) && \
+		npm install
+
+website_run: website_install
 	cd $(WEBSITE_DIR) && \
 		npm run dev
 
-run_core:
-	cd $(CORE_DIR) && \
-		go run cmd/main.go
-
-build_website: $(WEBSITE_DIR)/**/*
+website_build: $(WEBSITE_DIR)/**/* website_install
 	cd $(WEBSITE_DIR) && \
-		npm run build
+		WEBSITE_DIST_DIR=apps/core/pkg/web/static/website npm run build
 
-build_core: $(CORE_DIR)/**/*.go
+core_run:
+	cd $(CORE_DIR) && \
+		ENV_PATH=../../.env go run cmd/main.go
+
+core_build: $(CORE_DIR)/**/*.go website_build
 	mkdir -p $(OUTPUT_DIR)
 	cd $(CORE_DIR) && \
-		go build -o ../../$(OUTPUT_BINARY) $(CORE_MAIN_FILE)
+		go build -o ../../$(OUTPUT_DIR)/core $(CORE_MAIN_FILE)
 
 clean:
 	rm -rf $(OUTPUT_DIR) && \

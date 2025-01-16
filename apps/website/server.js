@@ -30,6 +30,8 @@ if (!isProduction) {
   const sirv = (await import('sirv')).default
   app.use(compression())
   app.use(base, sirv('./dist/client', { extensions: [] }))
+
+  await import('./dist/server/entry-server.js')
 }
 
 // Serve HTML
@@ -40,18 +42,16 @@ app.use('*all', async (req, res) => {
     /** @type {string} */
     let template
     /** @type {import('./src/entry-server.js').render} */
-    let render
     if (!isProduction) {
       // Always read fresh template in development
       template = await fs.readFile('./index.html', 'utf-8')
       template = await vite.transformIndexHtml(url, template)
-      render = (await vite.ssrLoadModule('/src/entry-server.js')).render
+      await vite.ssrLoadModule('/src/entry-server.js')
     } else {
       template = templateHtml
-      render = (await import('./dist/server/entry-server.js')).render
     }
 
-    const rendered = await render(url)
+    const rendered = globalThis.render(url)
 
     const html = template
       .replace(`<!--app-head-->`, rendered.head ?? '')

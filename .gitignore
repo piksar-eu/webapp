@@ -2,3 +2,4 @@ dist
 .history
 .vscode
 .env
+apps/core/pkg/web/static/*
