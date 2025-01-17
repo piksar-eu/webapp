@@ -33,6 +33,7 @@ func migrations() []Migration {
 	return []Migration{
 		m202501041719_init(),
 		m202501071400_easyconnect(),
+		m202501162300_sessions(),
 	}
 }
 

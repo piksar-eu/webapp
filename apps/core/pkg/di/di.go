@@ -8,11 +8,13 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/piksar-eu/webapp/apps/core/pkg/easyconnect"
 	"github.com/piksar-eu/webapp/apps/core/pkg/infrastructure"
+	"github.com/piksar-eu/webapp/apps/core/pkg/web"
 )
 
 var services = struct {
 	DB             *sql.DB
 	LeadRepository easyconnect.LeadRepository
+	SessionStore   web.SessionStore
 }{}
 
 func NewDb() *sql.DB {
@@ -35,4 +37,13 @@ func NewLeadRepository() easyconnect.LeadRepository {
 	}
 
 	return services.LeadRepository
+}
+
+func NewSessionStore() web.SessionStore {
+	if services.SessionStore == nil {
+		pgSessionStore := infrastructure.NewPgSessionStore(NewDb())
+		services.SessionStore = infrastructure.NewCachedSessionStore(pgSessionStore)
+	}
+
+	return services.SessionStore
 }

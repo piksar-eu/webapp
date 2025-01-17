@@ -32,6 +32,7 @@ func serveApi() {
 
 	var handler http.Handler = mux
 	handler = web.CorsMiddleware(handler)
+	handler = web.SessionMiddleware(di.NewSessionStore())(handler)
 
 	log.Printf("Serve api on port %d", port)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), handler)
@@ -49,6 +50,7 @@ func serveWebsite() {
 	web.ServeUi(mux)
 
 	var handler http.Handler = mux
+	handler = web.SessionMiddleware(di.NewSessionStore())(handler)
 
 	log.Printf("Serve website on port %d", port)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), handler)
