@@ -29,7 +29,7 @@ func SessionMiddleware(store SessionStore) func(next http.Handler) http.Handler 
 			}
 
 			if session == nil {
-				session := createSession()
+				session = createSession()
 				store.Save(session)
 
 				http.SetCookie(w, &http.Cookie{
@@ -110,14 +110,18 @@ func (s *SessionContext) Get(key string) interface{} {
 	return val
 }
 
-func (s *SessionContext) Del(key string) {
-	_, ok := s.session.Data[key]
-
-	if !ok {
-		return
+func (s *SessionContext) Del(keys ...string) {
+	keyExists := false
+	for _, key := range keys {
+		if _, ok := s.session.Data[key]; ok {
+			keyExists = true
+			delete(s.session.Data, key)
+		}
 	}
 
-	delete(s.session.Data, key)
+	if keyExists {
+		sessionStore.Save(s.session)
+	}
 }
 
 func SessionCtx(r *http.Request) *SessionContext {

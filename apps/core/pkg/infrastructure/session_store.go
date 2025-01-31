@@ -92,7 +92,6 @@ func (s *pgSessionStore) Save(session *web.Session) error {
 	if err != nil {
 		return fmt.Errorf("session data can not be marschal")
 	}
-	fmt.Println("save sess data", session.Data, dataJSON)
 
 	query := `
 		INSERT INTO core__sessions (id, created_at, expires_at, data)
@@ -159,9 +158,20 @@ func (s *cachedSessionStore) addToCache(session web.Session) {
 	defer s.mu.Unlock()
 
 	if _, exists := s.data[session.Id]; exists {
+		s.data[session.Id] = session
+
+		// Move the session ID to the end to mark it as recently used
+		for i, id := range s.order {
+			if id == session.Id {
+				s.order = append(s.order[:i], s.order[i+1:]...)
+				break
+			}
+		}
+		s.order = append(s.order, session.Id)
 		return
 	}
 
+	// If cache is full, remove the oldest session
 	if len(s.data) >= s.cacheSize {
 		oldestID := s.order[0]
 		s.order = s.order[1:]
