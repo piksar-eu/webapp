@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"rogchap.com/v8go"
@@ -18,6 +19,7 @@ var static embed.FS
 var serverEntryContent string
 var indexHTMLContent string
 var isolatePool isoPool
+var jsCache = make(map[string]string)
 
 func init() {
 	serverEntry, err := static.ReadFile("static/website/server/entry-server.js")
@@ -42,6 +44,18 @@ func ServeUi(mux *http.ServeMux) {
 		filepath := fmt.Sprintf("static/website/client%s", r.RequestURI)
 
 		if r.RequestURI != "/" && fileExists(filepath) {
+			if strings.HasPrefix(r.RequestURI, "/assets/index-") && strings.HasSuffix(r.RequestURI, ".js") {
+				if _, ok := jsCache[r.RequestURI]; !ok {
+					content, _ := static.ReadFile(filepath)
+					jsCache[r.RequestURI] = replaceViteEnv(string(content))
+				}
+
+				w.Header().Set("Content-Type", "application/javascript")
+				w.WriteHeader(200)
+				w.Write([]byte(jsCache[r.RequestURI]))
+				return
+			}
+
 			r.URL.Path = filepath
 
 			http.FileServer(http.FS(static)).ServeHTTP(w, r)
@@ -82,6 +96,19 @@ func fileExists(filename string) bool {
 		}
 	}
 	return true
+}
+
+func replaceViteEnv(val string) string {
+	for _, env := range os.Environ() {
+		parts := strings.SplitN(env, "=", 2)
+		if len(parts) == 2 && strings.HasPrefix(parts[0], "VITE_") {
+			key := parts[0]
+			value := parts[1]
+			val = strings.ReplaceAll(val, key, value)
+		}
+	}
+
+	return val
 }
 
 type isoCtx struct {
