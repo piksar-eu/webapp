@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/piksar-eu/webapp/apps/core/pkg/shared"
 )
 
 var sessionStore SessionStore
@@ -133,4 +134,16 @@ func SessionCtx(r *http.Request) *SessionContext {
 	}
 
 	return sessCtx
+}
+
+func GetSessionUser(r *http.Request) *shared.SessionUser {
+	sessCtx := SessionCtx(r)
+	user := sessCtx.Get("user")
+
+	sessionUser := &shared.SessionUser{}
+	if err := shared.MapToStruct(user, &sessionUser); err != nil {
+		return nil
+	}
+
+	return sessionUser
 }

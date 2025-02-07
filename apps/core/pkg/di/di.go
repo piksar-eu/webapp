@@ -6,6 +6,7 @@ import (
 	"os"
 
 	_ "github.com/lib/pq"
+	"github.com/piksar-eu/webapp/apps/core/pkg/auth"
 	"github.com/piksar-eu/webapp/apps/core/pkg/easyconnect"
 	"github.com/piksar-eu/webapp/apps/core/pkg/infrastructure"
 	"github.com/piksar-eu/webapp/apps/core/pkg/web"
@@ -15,6 +16,7 @@ var services = struct {
 	DB             *sql.DB
 	LeadRepository easyconnect.LeadRepository
 	SessionStore   web.SessionStore
+	UserRepository auth.UserRepository
 }{}
 
 func NewDb() *sql.DB {
@@ -37,6 +39,14 @@ func NewLeadRepository() easyconnect.LeadRepository {
 	}
 
 	return services.LeadRepository
+}
+
+func NewUserRepository() auth.UserRepository {
+	if services.UserRepository == nil {
+		services.UserRepository = infrastructure.NewPgAuthUserRepository(NewDb())
+	}
+
+	return services.UserRepository
 }
 
 func NewSessionStore() web.SessionStore {

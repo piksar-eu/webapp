@@ -1,5 +1,12 @@
 <script>
     import { Link } from "svelte-routing";
+	import { user } from '../store';
+    import { logout as logoutApiCall } from "../api";
+
+    const logout = async () => {
+		await logoutApiCall()
+		user.set(undefined)
+    }
 </script>
 
 <nav class="nav">
@@ -7,6 +14,10 @@
         <li><Link to="/"><img src="/website.png" alt="logo" height="48"/></Link></li>
         <li><Link to="/o-nas">O nas</Link></li>
         <li><Link to="/kontakt">Kontakt</Link></li>
+
+        {#if $user !== undefined}
+            <li><a href="#" on:click={logout}>Wyloguj</a></li>
+        {/if}
     </ul>
 </nav>
 

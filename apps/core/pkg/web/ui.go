@@ -81,6 +81,14 @@ func ServeUi(mux *http.ServeMux) {
 		finalHTML := strings.Replace(indexHTMLContent, "<!--app-head-->", result["head"], 1)
 		finalHTML = strings.Replace(finalHTML, "<!--app-html-->", result["html"], 1)
 
+		if u := GetSessionUser(r); u != nil {
+			finalHTML = strings.Replace(finalHTML, "<!--app-js-->", fmt.Sprintf(`<script>
+				globalThis.user = {
+					email: "%s"
+				}
+			</script>`, u.Email), 1)
+		}
+
 		isolatePool.Put(ic)
 
 		w.Header().Set("Content-Type", "text/html")

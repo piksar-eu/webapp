@@ -72,7 +72,12 @@ a {
 a:hover {
   color: #42011e;
 }
-
+a.secondary {
+  color: #42a5e0;
+}
+a.secondary:hover {
+  color: #2d84b7;
+}
 .button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -91,4 +96,24 @@ a:hover {
 .button:focus,
 .button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+.button:disabled {
+  background-color: #80c3df;
+  color: #5e5d5d;
+  cursor: default;
+}
+input {
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+}
+.centered-flex-layout {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: var(--clr-secondary);
+  color: #EBEBEB;
 }

@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/piksar-eu/webapp/apps/core/pkg/auth"
 	"github.com/piksar-eu/webapp/apps/core/pkg/di"
 	"github.com/piksar-eu/webapp/apps/core/pkg/easyconnect"
 	_ "github.com/piksar-eu/webapp/apps/core/pkg/envloader"
@@ -29,6 +30,7 @@ func serveApi() {
 	mux := http.NewServeMux()
 
 	easyconnect.ServeApi(mux, di.NewLeadRepository())
+	auth.ServeApi(mux, di.NewUserRepository())
 
 	var handler http.Handler = mux
 	handler = web.CorsMiddleware(handler)

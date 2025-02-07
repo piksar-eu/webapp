@@ -52,8 +52,6 @@
             display: flex;
             
             input {
-                padding: 0.6em 1.2em;
-                font-size: 1em;
                 flex-grow: 1;
             }
 
