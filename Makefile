@@ -17,7 +17,7 @@ website_run: website_install
 
 website_build: $(WEBSITE_DIR)/**/* website_install
 	cd $(WEBSITE_DIR) && \
-		$(shell sed -n 's/^\(VITE_[^=]*\)=.*/\1=\1/p' .env) \
+		$(shell sed -n 's/^\(VITE_[^=]*\)=.*/\1=\1/p' .env_example) \
 		WEBSITE_DIST_DIR=apps/core/pkg/web/static/website \
 		npm run build
 
