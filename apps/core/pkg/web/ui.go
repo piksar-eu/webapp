@@ -16,43 +16,43 @@ import (
 
 //go:embed static/*
 var static embed.FS
-var serverEntryContent string
-var indexHTMLContent string
-var isolatePool isoPool
-var jsCache = make(map[string]string)
+var isolatePool = make(map[string]isoPool, 2)
+var cache = make(map[string]string)
 
-func init() {
-	serverEntry, err := static.ReadFile("static/website/server/entry-server.js")
+func prepare(app string) {
+	serverEntry, err := static.ReadFile(fmt.Sprintf("static/%s/server/entry-server.js", app))
 	if err != nil {
 		log.Panicln("entry-server.js does not exist", err)
 	}
-	serverEntryContent = string(serverEntry)
+	cache[fmt.Sprintf("%s:serverEntryContent", app)] = string(serverEntry)
 
-	indexHTML, err := static.ReadFile("static/website/client/index.html")
+	indexHTML, err := static.ReadFile(fmt.Sprintf("static/%s/client/index.html", app))
 	if err != nil {
 		log.Panicln("index.html does not exist", err)
 	}
-	indexHTMLContent = string(indexHTML)
+	cache[fmt.Sprintf("%s:indexHTMLContent", app)] = string(indexHTML)
 
-	isolatePool = isoPool{
+	isolatePool[app] = isoPool{
 		pool: make(chan isoCtx, 10),
 	}
 }
 
-func ServeUi(mux *http.ServeMux) {
+func ServeUi(mux *http.ServeMux, app string) {
+	prepare(app)
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		filepath := fmt.Sprintf("static/website/client%s", r.RequestURI)
+		filepath := fmt.Sprintf("static/%s/client%s", app, r.RequestURI)
 
 		if r.RequestURI != "/" && fileExists(filepath) {
 			if strings.HasPrefix(r.RequestURI, "/assets/index-") && strings.HasSuffix(r.RequestURI, ".js") {
-				if _, ok := jsCache[r.RequestURI]; !ok {
+				cacheKey := fmt.Sprintf("%s:%s", app, r.RequestURI)
+				if _, ok := cache[cacheKey]; !ok {
 					content, _ := static.ReadFile(filepath)
-					jsCache[r.RequestURI] = replaceViteEnv(string(content))
+					cache[cacheKey] = replaceViteEnv(string(content))
 				}
 
 				w.Header().Set("Content-Type", "application/javascript")
 				w.WriteHeader(200)
-				w.Write([]byte(jsCache[r.RequestURI]))
+				w.Write([]byte(cache[cacheKey]))
 				return
 			}
 
@@ -62,7 +62,8 @@ func ServeUi(mux *http.ServeMux) {
 			return
 		}
 
-		ic := isolatePool.Get()
+		ip := isolatePool[app]
+		ic := ip.Get(app)
 
 		renderCmd := fmt.Sprintf(`JSON.stringify(render("%s"))`, r.URL.Path)
 		val, err := ic.ctx.RunScript(renderCmd, "entry-server.js")
@@ -78,7 +79,7 @@ func ServeUi(mux *http.ServeMux) {
 			log.Panicln("Can not parse ssr result", err)
 		}
 
-		finalHTML := strings.Replace(indexHTMLContent, "<!--app-head-->", result["head"], 1)
+		finalHTML := strings.Replace(cache[fmt.Sprintf("%s:indexHTMLContent", app)], "<!--app-head-->", result["head"], 1)
 		finalHTML = strings.Replace(finalHTML, "<!--app-html-->", result["html"], 1)
 
 		if u := GetSessionUser(r); u != nil {
@@ -89,7 +90,7 @@ func ServeUi(mux *http.ServeMux) {
 			</script>`, u.Email), 1)
 		}
 
-		isolatePool.Put(ic)
+		ip.Put(ic)
 
 		w.Header().Set("Content-Type", "text/html")
 		w.Write([]byte(finalHTML))
@@ -128,7 +129,7 @@ type isoPool struct {
 	pool chan isoCtx
 }
 
-func (i *isoPool) Get() isoCtx {
+func (i *isoPool) Get(app string) isoCtx {
 	select {
 	case ic := <-i.pool:
 		return ic
@@ -136,7 +137,7 @@ func (i *isoPool) Get() isoCtx {
 		iso := v8go.NewIsolate()
 		ctx := v8go.NewContext(iso)
 
-		script, err := iso.CompileUnboundScript(serverEntryContent, "entry-server.js", v8go.CompileOptions{})
+		script, err := iso.CompileUnboundScript(cache[fmt.Sprintf("%s:serverEntryContent", app)], "entry-server.js", v8go.CompileOptions{})
 		if err != nil {
 			log.Panicln("Can not compile entry-server.js", err)
 		}

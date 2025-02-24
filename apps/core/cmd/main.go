@@ -20,7 +20,11 @@ func init() {
 }
 
 func main() {
-	go serveWebsite()
+	port, _ := strconv.Atoi(os.Getenv("WEBSITE_PORT"))
+	go serveFrontend("website", port)
+	port, _ = strconv.Atoi(os.Getenv("DASHBOARD_PORT"))
+	go serveFrontend("dashboard", port)
+
 	serveApi()
 }
 
@@ -44,17 +48,16 @@ func serveApi() {
 	}
 }
 
-func serveWebsite() {
-	port, _ := strconv.Atoi(os.Getenv("WEBSITE_PORT"))
+func serveFrontend(app string, port int) {
 
 	mux := http.NewServeMux()
 
-	web.ServeUi(mux)
+	web.ServeUi(mux, app)
 
 	var handler http.Handler = mux
 	handler = web.SessionMiddleware(di.NewSessionStore())(handler)
 
-	log.Printf("Serve website on port %d", port)
+	log.Printf("Serve %s on port %d", app, port)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), handler)
 
 	if err != nil {

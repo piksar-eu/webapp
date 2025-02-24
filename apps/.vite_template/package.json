@@ -1,0 +1,26 @@
+{
+  "name": "dashboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node server",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build --emptyOutDir --outDir=../../${DASHBOARD_DIST_DIR:-apps/dashboard/dist}/client",
+    "build:server": "vite build -c vite.config.server.js --emptyOutDir --ssr src/entry-server.js --outDir=../../${DASHBOARD_DIST_DIR:-apps/dashboard/dist}/server",
+    "preview": "cross-env NODE_ENV=production node server"
+  },
+  "dependencies": {
+    "compression": "^1.7.5",
+    "express": "^5.0.1",
+    "sirv": "^3.0.0"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.0.1",
+    "cross-env": "^7.0.3",
+    "sass-embedded": "^1.83.0",
+    "svelte": "^5.2.9",
+    "svelte-routing": "^2.13.0",
+    "vite": "^6.0.1"
+  }
+}
