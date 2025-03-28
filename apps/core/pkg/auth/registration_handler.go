@@ -16,7 +16,7 @@ func (h *RegistrationHandler) Handle(email string, salt string, verifier string)
 		return fmt.Errorf("incorrect email")
 	}
 
-	user, err := h.userRepo.Get(email)
+	user, err := h.userRepo.GetByEmail(email)
 	if err != nil {
 		return err
 	}
@@ -25,7 +25,7 @@ func (h *RegistrationHandler) Handle(email string, salt string, verifier string)
 		return fmt.Errorf("already registered")
 	}
 
-	user, err = createUser(email)
+	user, err = createUser(h.userRepo.NewId(), email)
 
 	if err != nil {
 		return err

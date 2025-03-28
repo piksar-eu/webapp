@@ -14,7 +14,7 @@ func m202501041719_init() Migration {
 			_, err := db.Exec(`CREATE TABLE IF NOT EXISTS core__migration_log (
 				id SERIAL PRIMARY KEY,
 				date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				name VARCHAR(255),
+				name VARCHAR,
 				err TEXT
 			);`)
 			if err != nil {

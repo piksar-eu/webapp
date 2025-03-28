@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/piksar-eu/webapp/apps/core/pkg/auth"
 	"github.com/piksar-eu/webapp/apps/core/pkg/shared"
@@ -20,14 +19,67 @@ type pgAuthUserRepository struct {
 	db *sql.DB
 }
 
-func (r *pgAuthUserRepository) Get(email string) (*auth.User, error) {
-	row := r.db.QueryRow("SELECT auth_methods, created_at FROM auth__users WHERE email = $1 LIMIT 1", email)
+func (r *pgAuthUserRepository) GetById(id string) (*auth.User, error) {
+	row := r.db.QueryRow("SELECT id, email, name, auth_methods, created_at FROM auth__users WHERE id = $1 LIMIT 1", id)
 
+	user, err := r.scanToUser(row)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (r *pgAuthUserRepository) GetByEmail(email string) (*auth.User, error) {
+	row := r.db.QueryRow("SELECT id, email, name, auth_methods, created_at FROM auth__users WHERE email = $1 LIMIT 1", email)
+
+	user, err := r.scanToUser(row)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+func (r *pgAuthUserRepository) Save(user *auth.User) error {
+
+	authMethodsJSON, err := json.Marshal(user.AuthMethods)
+	if err != nil {
+		return fmt.Errorf("AuthMethods can not be marschal")
+	}
+	query := `
+		INSERT INTO auth__users (id, email, name, auth_methods, created_at)
+		VALUES ($1, $2, $3, $4, $5)
+		ON CONFLICT (id) DO UPDATE
+		SET email = EXCLUDED.email,
+			name = EXCLUDED.name,
+			auth_methods = EXCLUDED.auth_methods,
+			created_at = EXCLUDED.created_at;
+	`
+	_, err = r.db.Exec(query, user.Id, user.Email, user.Name, authMethodsJSON, user.CreatedAt)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *pgAuthUserRepository) NewId() string {
+	for {
+		id, _ := shared.RandId("us", 7)
+		user, _ := r.GetById(id)
+		if user != nil {
+			continue
+		}
+
+		return id
+	}
+}
+
+func (r *pgAuthUserRepository) scanToUser(row s) (*auth.User, error) {
+	user := &auth.User{}
 	var authMethodsRaw string
-	var authMethods []auth.AuthMethod
-	var createdAt time.Time
 
-	err := row.Scan(&authMethodsRaw, &createdAt)
+	err := row.Scan(&user.Id, &user.Email, &user.Name, &authMethodsRaw, &user.CreatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -59,33 +111,12 @@ func (r *pgAuthUserRepository) Get(email string) (*auth.User, error) {
 			return nil, fmt.Errorf("unsupported auth method: %s", m.Method)
 		}
 
-		authMethods = append(authMethods, m)
+		user.AuthMethods = append(user.AuthMethods, m)
 	}
 
-	return &auth.User{
-		Email:       email,
-		AuthMethods: authMethods,
-		CreatedAt:   createdAt,
-	}, nil
+	return user, nil
 }
 
-func (r *pgAuthUserRepository) Save(user *auth.User) error {
-
-	authMethodsJSON, err := json.Marshal(user.AuthMethods)
-	if err != nil {
-		return fmt.Errorf("AuthMethods can not be marschal")
-	}
-	query := `
-		INSERT INTO auth__users (email, auth_methods, created_at)
-		VALUES ($1, $2, $3)
-		ON CONFLICT (email) DO UPDATE
-		SET auth_methods = EXCLUDED.auth_methods,
-			created_at = EXCLUDED.created_at;
-	`
-	_, err = r.db.Exec(query, user.Email, authMethodsJSON, user.CreatedAt)
-	if err != nil {
-		return err
-	}
-
-	return nil
+type s interface {
+	Scan(dest ...any) error
 }

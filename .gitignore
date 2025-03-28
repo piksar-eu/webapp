@@ -3,3 +3,4 @@ dist
 .vscode
 .env
 apps/core/pkg/web/static/*
+webapp.code-workspace

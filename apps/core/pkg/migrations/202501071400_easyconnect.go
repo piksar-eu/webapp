@@ -12,8 +12,8 @@ func m202501071400_easyconnect() Migration {
 
 			if _, err := db.Exec(`
 			CREATE TABLE IF NOT EXISTS easyconnect__leads (
-				email VARCHAR(255) PRIMARY KEY,
-				source VARCHAR(255),
+				email VARCHAR PRIMARY KEY,
+				source VARCHAR,
 				marketing_consent BOOLEAN,
 				created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 			);`); err != nil {

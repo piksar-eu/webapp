@@ -1,6 +1,7 @@
 package shared
 
 import (
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
 	"reflect"
@@ -57,4 +58,34 @@ func JsonEqual(a, b []byte) bool {
 		return false
 	}
 	return reflect.DeepEqual(j1, j2)
+}
+
+func RandId(prefix string, length int) (string, error) {
+	rand, err := RandomStringGenerator(length-len(prefix), "")
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s%s", prefix, rand), nil
+}
+
+func RandomStringGenerator(length int, characters string) (string, error) {
+	if characters == "" {
+		characters = "abcdefghijklmnopqrstuvwxyz0123456789"
+	}
+
+	charactersLength := len(characters)
+	result := make([]byte, length)
+
+	randomBytes := make([]byte, length)
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		return "", err
+	}
+
+	for i, b := range randomBytes {
+		result[i] = characters[b%byte(charactersLength)]
+	}
+
+	return string(result), nil
 }

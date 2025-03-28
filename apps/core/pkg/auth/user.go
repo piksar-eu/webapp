@@ -7,12 +7,16 @@ import (
 )
 
 type UserRepository interface {
-	Get(email string) (*User, error)
+	GetById(id string) (*User, error)
+	GetByEmail(email string) (*User, error)
 	Save(*User) error
+	NewId() string
 }
 
 type User struct {
+	Id          string
 	Email       string
+	Name        string
 	AuthMethods []AuthMethod
 	CreatedAt   time.Time
 }
@@ -27,7 +31,7 @@ type SRPData struct {
 	Verifier string `json:"verifier"`
 }
 
-func createUser(email string) (*User, error) {
+func createUser(id string, email string) (*User, error) {
 	email, err := shared.SanitizeEmail(email)
 
 	if err != nil {
@@ -35,6 +39,7 @@ func createUser(email string) (*User, error) {
 	}
 
 	return &User{
+		Id:        id,
 		Email:     email,
 		CreatedAt: time.Now(),
 	}, nil

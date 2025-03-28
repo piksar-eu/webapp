@@ -57,7 +57,7 @@ func (h *LoginHandler) HandleInit(credentials *LoginInitReq) (*LoginInitRes, err
 		salt, verifier []byte
 	)
 
-	user, _ := h.userRepo.Get(credentials.Email)
+	user, _ := h.userRepo.GetByEmail(credentials.Email)
 
 	if user != nil {
 		data := user.getAuthMethodData("srp").(SRPData)
