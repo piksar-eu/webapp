@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/piksar-eu/webapp/apps/core/pkg/auth"
 	"github.com/piksar-eu/webapp/apps/core/pkg/di"
@@ -33,11 +34,15 @@ func serveApi() {
 
 	mux := http.NewServeMux()
 
-	easyconnect.ServeApi(mux, di.NewLeadRepository())
-	auth.ServeApi(mux, di.NewUserRepository())
+	easyconnectModule := easyconnect.LoadModule(di.NewLeadRepository(), di.NewAuthorizationStore())
+	authModule := auth.LoadModule(di.NewUserRepository(), di.NewRoleRepository(), di.NewAuthorizationStore())
+
+	easyconnectModule.ServeApi(mux)
+	authModule.ServeApi(mux)
 
 	var handler http.Handler = mux
 	handler = web.CorsMiddleware(handler)
+	handler = auth.AuthorizationMiddleware(di.NewAuthorizationStore())(handler)
 	handler = web.SessionMiddleware(di.NewSessionStore())(handler)
 
 	log.Printf("Serve api on port %d", port)
@@ -52,7 +57,7 @@ func serveFrontend(app string, port int) {
 
 	mux := http.NewServeMux()
 
-	web.ServeUi(mux, app)
+	web.ServeUi(mux, app, userJsonData)
 
 	var handler http.Handler = mux
 	handler = web.SessionMiddleware(di.NewSessionStore())(handler)
@@ -63,4 +68,22 @@ func serveFrontend(app string, port int) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func userJsonData(r *http.Request) string {
+	as := di.NewAuthorizationStore()
+
+	if u := web.GetSessionUser(r); u != nil {
+		up := as.UserPermissions(u.Id)
+		for i, v := range up {
+			up[i] = fmt.Sprintf(`"%s"`, v)
+		}
+
+		return fmt.Sprintf(`{
+					email: "%s",
+					permissions: [%s]
+				}`, u.Email, strings.Join(up, ","))
+	}
+
+	return ""
 }

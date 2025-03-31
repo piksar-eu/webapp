@@ -3,7 +3,7 @@ import express from 'express'
 
 // Constants
 const isProduction = process.env.NODE_ENV === 'production'
-const port = process.env.PORT || 5173
+const port = process.env.PORT || 5174
 const base = process.env.BASE || '/'
 
 // Cached production assets
@@ -51,11 +51,19 @@ app.use('*all', async (req, res) => {
       template = templateHtml
     }
 
-    const rendered = globalThis.render(url)
+    const user = {
+      email: "piotr@piksar.eu",
+      permissions: ["leads_view","roles_view","roles_edit","users_view","users_edit"]
+    }
+
+    const rendered = globalThis.render(url, user)
 
     const html = template
       .replace(`<!--app-head-->`, rendered.head ?? '')
       .replace(`<!--app-html-->`, rendered.body ?? '')
+      .replace(`<!--app-js-->`, `<script>
+				globalThis.user = ${JSON.stringify(user)}
+			</script>`)
 
     res.status(200).set({ 'Content-Type': 'text/html' }).send(html)
   } catch (e) {

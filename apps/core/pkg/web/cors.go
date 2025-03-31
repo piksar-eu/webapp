@@ -18,5 +18,6 @@ func CorsMiddleware(next http.Handler) http.Handler {
 	return cors.New(cors.Options{
 		AllowedOrigins:   origins,
 		AllowCredentials: true,
+		AllowedMethods:   []string{"GET", "POST", "DELETE"},
 	}).Handler(next)
 }

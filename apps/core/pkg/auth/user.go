@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"slices"
 	"time"
 
 	"github.com/piksar-eu/webapp/apps/core/pkg/shared"
@@ -9,6 +10,7 @@ import (
 type UserRepository interface {
 	GetById(id string) (*User, error)
 	GetByEmail(email string) (*User, error)
+	List() (map[string]*User, error)
 	Save(*User) error
 	NewId() string
 }
@@ -18,6 +20,7 @@ type User struct {
 	Email       string
 	Name        string
 	AuthMethods []AuthMethod
+	Roles       []string
 	CreatedAt   time.Time
 }
 
@@ -63,4 +66,14 @@ func (u *User) getAuthMethodData(method string) interface{} {
 		}
 	}
 	return nil
+}
+
+func (u *User) addRoles(ids ...string) {
+	for _, id := range ids {
+		if slices.Contains(u.Roles, id) {
+			continue
+		}
+
+		u.Roles = append(u.Roles, id)
+	}
 }

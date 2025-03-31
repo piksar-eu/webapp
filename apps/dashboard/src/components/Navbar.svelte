@@ -1,12 +1,13 @@
 <script>
-    import { Link } from "svelte-routing";
-	import { user } from '../store';
+	import { link } from "svelte-routing";
+	import { user } from '../shared';
     import { logout as logoutApiCall } from "../api";
 
     const logout = async () => {
 		await logoutApiCall()
 		user.set(undefined)
     }
+
 </script>
 
 <nav class="nav">
@@ -17,13 +18,13 @@
                 <div class="nav__profile-img-mask">
                     <img src="/user.svg" alt=""/>
                 </div>
-                <div class="nav__profile-username">John Doe</div>
+                <div class="nav__profile-username">{ $user?.email }</div>
             </div>
             <ul class="nav__dropdown">
-                <li><Link to="/">Profil</Link></li>
-                <li><Link to="/">Ustawienia</Link></li>
+                <li><a use:link href="/">Profil</a></li>
+                <li><a use:link href="/">Ustawienia</a></li>
                 <li class="dropdown-divider"></li>
-                <li><Link to="/">Wyloguj</Link></li>
+                <li><button type="button" on:click={logout}>Wyloguj</button></li>
             </ul>
         </li>
     </ul>
@@ -123,11 +124,17 @@
                         background-color: var(--clr-primary);
                     }
 
-                    :global(a) {
+                    a, button {
                         display: block;
                         width: 100%;
                         height: 100%;
                         padding: 5px 10px;
+                        border: none;
+                        background-color: inherit;
+                        font-size: 1rem;
+                        line-height: 2rem;
+                        text-align: left;
+                        cursor: pointer;
                     }
                 }
 

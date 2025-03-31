@@ -1,5 +1,5 @@
 <script>
-    import { alert } from '../store';
+    import { alert } from '../shared';
 
     let a;
 
@@ -10,22 +10,25 @@
                 msg: $alert.msg ?? "",
             };
 
+            setTimeout(() => {
+                a = undefined
+            }, 5000)
             alert.set(undefined);
         }
     }
 </script>
 
 {#if a}
-    <div class="container">
-        <div class="alert alert-{a?.type}">{a.msg}</div>
-    </div>
+    <div class="alert alert-{a?.type}">{@html a.msg}</div>
 {/if}
 
 <style lang="scss">
     .alert {
-        align-self: center;
-        width: 100%;
-        align-self: center;
+        position: fixed;
+        bottom: 0;
+        right: 25px;
+        z-index: 10000;
+        width: 50%;
         padding: 10px;
         border-width: 1px;
         border-style: solid;

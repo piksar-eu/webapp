@@ -35,6 +35,7 @@ func migrations() []Migration {
 		m202501071400_easyconnect(),
 		m202501162300_sessions(),
 		m202501270750_users(),
+		m202503171232_authorization(),
 	}
 }
 

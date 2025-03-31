@@ -5,8 +5,7 @@ import (
 	"net/http"
 )
 
-func ServeApi(mux *http.ServeMux, leadRepo LeadRepository) {
-
+func (m *Module) ServeApi(mux *http.ServeMux) {
 	type subscribeRequest struct {
 		Email string `json:"email"`
 	}
@@ -20,7 +19,7 @@ func ServeApi(mux *http.ServeMux, leadRepo LeadRepository) {
 			return
 		}
 
-		subscribe := SubscribeFn(leadRepo)
+		subscribe := SubscribeFn(m.leadRepo)
 		err = subscribe(req.Email)
 
 		if err != nil {

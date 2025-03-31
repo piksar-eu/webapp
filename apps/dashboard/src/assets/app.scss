@@ -102,6 +102,10 @@ a.secondary:hover {
   color: #5e5d5d;
   cursor: default;
 }
+
+.button-secondary {
+	background-color: #ddd;
+}
 .button--sm {
 	padding: 0.2em 0.5em;
 	font-size: 0.8em;
@@ -120,4 +124,144 @@ input {
   text-align: center;
   background-color: var(--clr-secondary);
   color: #EBEBEB;
+}
+
+.grid {
+  table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #333;
+    background-color: #fff;
+  }
+
+  thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 2px solid #e9ecef;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+  }
+
+  tbody td {
+    padding: 0.5rem 1rem ;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: top;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+
+  tbody tr:hover {
+    background-color: #f1f3f5;
+  }
+
+
+	/* Action icons column */
+  .actions-cell {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .action-icons {
+    display: inline-flex;
+    gap: 12px;
+
+    button {
+      border: none;
+      background-color: transparent;
+    }
+
+    .action-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      background-size: contain;
+      background-repeat: no-repeat;
+      fill: #3a405a;
+      cursor: pointer;
+    }
+
+    .action-icon:hover {
+      opacity: 1;
+      transform: scale(1.05);
+      fill: #2b2f43;
+    }
+  }
+
+  .xmark-icon {
+    fill: #a90404;
+  }
+  
+  .check-icon {
+    fill: #06761d;
+  }
+
+  @media (max-width: 768px) {
+    table {
+      font-size: 0.85rem;
+    }
+    
+    thead th, tbody td, tfoot td {
+      padding: 0.5rem;
+    }
+  }
+
+  /* Optional: Add subtle animation to hover */
+  tbody tr {
+    transition: background-color 0.2s ease;
+  }
+}
+
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  transition: border-color 0.15s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e9ecef;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  margin-left: 2px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: #d5d8e5;
 }

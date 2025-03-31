@@ -37,7 +37,7 @@ func prepare(app string) {
 	}
 }
 
-func ServeUi(mux *http.ServeMux, app string) {
+func ServeUi(mux *http.ServeMux, app string, uFn GetUserJson) {
 	prepare(app)
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		filepath := fmt.Sprintf("static/%s/client%s", app, r.RequestURI)
@@ -65,7 +65,9 @@ func ServeUi(mux *http.ServeMux, app string) {
 		ip := isolatePool[app]
 		ic := ip.Get(app)
 
-		renderCmd := fmt.Sprintf(`JSON.stringify(render("%s"))`, r.URL.Path)
+		u := uFn(r)
+
+		renderCmd := fmt.Sprintf(`JSON.stringify(render("%s", %s))`, r.URL.Path, u)
 		val, err := ic.ctx.RunScript(renderCmd, "entry-server.js")
 		if err != nil {
 			if jsErr, ok := err.(*v8go.JSError); ok {
@@ -82,20 +84,19 @@ func ServeUi(mux *http.ServeMux, app string) {
 		finalHTML := strings.Replace(cache[fmt.Sprintf("%s:indexHTMLContent", app)], "<!--app-head-->", result["head"], 1)
 		finalHTML = strings.Replace(finalHTML, "<!--app-html-->", result["html"], 1)
 
-		if u := GetSessionUser(r); u != nil {
+		if u != "" {
 			finalHTML = strings.Replace(finalHTML, "<!--app-js-->", fmt.Sprintf(`<script>
-				globalThis.user = {
-					email: "%s"
-				}
-			</script>`, u.Email), 1)
+				globalThis.user = %s
+			</script>`, u), 1)
 		}
-
 		ip.Put(ic)
 
 		w.Header().Set("Content-Type", "text/html")
 		w.Write([]byte(finalHTML))
 	})
 }
+
+type GetUserJson func(r *http.Request) string
 
 func fileExists(filename string) bool {
 	_, err := static.Open(filename)

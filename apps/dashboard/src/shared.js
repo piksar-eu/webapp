@@ -27,4 +27,11 @@ const nav = createLocalStorageStore('nav', {
 const alert = writable(undefined);
 const user = writable(globalThis.user);
 
-export { alert, user, nav }
+const can = (...permissions) => {
+    const userPermissions = globalThis.user?.permissions ?? [];
+    return permissions.some(permission => 
+        userPermissions.includes(permission)
+    );
+}
+
+export { alert, user, nav, can }

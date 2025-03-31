@@ -129,7 +129,11 @@ func (h *LoginHandler) HandleSRP(credentials *LoginSRPReq) (*LoginSRPRes, error)
 	}
 
 	email := h.sessCtx.Get("srpUsername").(string)
-	userData := h.authSuccess(email)
+
+	userData, err := h.authSuccess(email)
+	if err != nil {
+		return nil, err
+	}
 
 	h.sessCtx.Del("srpState", "srpUsername")
 
@@ -139,15 +143,22 @@ func (h *LoginHandler) HandleSRP(credentials *LoginSRPReq) (*LoginSRPRes, error)
 	}, nil
 }
 
-func (h *LoginHandler) authSuccess(email string) *LoginResUser {
+func (h *LoginHandler) authSuccess(email string) (*LoginResUser, error) {
+	user, _ := h.userRepo.GetByEmail(email)
+
+	if user == nil {
+		return nil, fmt.Errorf("failed to access user data")
+	}
+
 	h.sessCtx.Add("user", &shared.SessionUser{
-		Email:    email,
+		Id:       user.Id,
+		Email:    user.Email,
 		LoggedAt: time.Now(),
 	})
 
 	return &LoginResUser{
-		Email: email,
-	}
+		Email: user.Email,
+	}, nil
 }
 
 func FakeSRP(username string) ([]byte, []byte) {

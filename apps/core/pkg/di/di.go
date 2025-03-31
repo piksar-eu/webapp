@@ -13,10 +13,12 @@ import (
 )
 
 var services = struct {
-	DB             *sql.DB
-	LeadRepository easyconnect.LeadRepository
-	SessionStore   web.SessionStore
-	UserRepository auth.UserRepository
+	DB                 *sql.DB
+	LeadRepository     easyconnect.LeadRepository
+	SessionStore       web.SessionStore
+	UserRepository     auth.UserRepository
+	RoleRepository     auth.RoleRepository
+	AuthorizationStore auth.AuthorizationStore
 }{}
 
 func NewDb() *sql.DB {
@@ -49,6 +51,14 @@ func NewUserRepository() auth.UserRepository {
 	return services.UserRepository
 }
 
+func NewRoleRepository() auth.RoleRepository {
+	if services.RoleRepository == nil {
+		services.RoleRepository = infrastructure.NewPgAuthRoleRepository(NewDb())
+	}
+
+	return services.RoleRepository
+}
+
 func NewSessionStore() web.SessionStore {
 	if services.SessionStore == nil {
 		pgSessionStore := infrastructure.NewPgSessionStore(NewDb())
@@ -56,4 +66,12 @@ func NewSessionStore() web.SessionStore {
 	}
 
 	return services.SessionStore
+}
+
+func NewAuthorizationStore() auth.AuthorizationStore {
+	if services.AuthorizationStore == nil {
+		services.AuthorizationStore = infrastructure.NewAuthorizationStore(NewUserRepository(), NewRoleRepository())
+	}
+
+	return services.AuthorizationStore
 }
