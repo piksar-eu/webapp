@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 func SanitizeEmail(email string) (string, error) {
@@ -88,4 +89,18 @@ func RandomStringGenerator(length int, characters string) (string, error) {
 	}
 
 	return string(result), nil
+}
+
+func SyncMapToMap(m *sync.Map) map[string]interface{} {
+	converted := make(map[string]interface{})
+	if m == nil {
+		return converted
+	}
+	m.Range(func(key, value interface{}) bool {
+		if ks, ok := key.(string); ok {
+			converted[ks] = value
+		}
+		return true
+	})
+	return converted
 }

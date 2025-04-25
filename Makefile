@@ -38,7 +38,7 @@ dashboard_build: $(DASHBOARD_DIR)/**/* dashboard_install
 
 core_run:
 	cd $(CORE_DIR) && \
-		ENV_PATH=../../.env go run cmd/main.go
+		ENV_PATH=../../.env go run --race cmd/main.go
 
 core_build: $(CORE_DIR)/**/*.go website_build dashboard_build
 	mkdir -p $(OUTPUT_DIR)

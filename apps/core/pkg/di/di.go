@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"sync"
 
 	_ "github.com/lib/pq"
 	"github.com/piksar-eu/webapp/apps/core/pkg/auth"
@@ -21,8 +22,10 @@ var services = struct {
 	AuthorizationStore auth.AuthorizationStore
 }{}
 
+var dbOnce sync.Once
+
 func NewDb() *sql.DB {
-	if services.DB == nil {
+	dbOnce.Do(func() {
 		connStr := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable", os.Getenv("PG_HOST"), os.Getenv("PG_USER"), os.Getenv("PG_PASS"), os.Getenv("PG_DBNAME"))
 		db, err := sql.Open("postgres", connStr)
 		if err != nil {
@@ -30,48 +33,58 @@ func NewDb() *sql.DB {
 		}
 
 		services.DB = db
-	}
+	})
 
 	return services.DB
 }
 
+var leadRepositoryOnce sync.Once
+
 func NewLeadRepository() easyconnect.LeadRepository {
-	if services.LeadRepository == nil {
+	leadRepositoryOnce.Do(func() {
 		services.LeadRepository = infrastructure.NewPgEasyConnectLeadRepository(NewDb())
-	}
+	})
 
 	return services.LeadRepository
 }
 
+var userRepositoryOnce sync.Once
+
 func NewUserRepository() auth.UserRepository {
-	if services.UserRepository == nil {
+	userRepositoryOnce.Do(func() {
 		services.UserRepository = infrastructure.NewPgAuthUserRepository(NewDb())
-	}
+	})
 
 	return services.UserRepository
 }
 
+var roleRepositoryOnce sync.Once
+
 func NewRoleRepository() auth.RoleRepository {
-	if services.RoleRepository == nil {
+	roleRepositoryOnce.Do(func() {
 		services.RoleRepository = infrastructure.NewPgAuthRoleRepository(NewDb())
-	}
+	})
 
 	return services.RoleRepository
 }
 
+var sessionStoreOnce sync.Once
+
 func NewSessionStore() web.SessionStore {
-	if services.SessionStore == nil {
+	sessionStoreOnce.Do(func() {
 		pgSessionStore := infrastructure.NewPgSessionStore(NewDb())
 		services.SessionStore = infrastructure.NewCachedSessionStore(pgSessionStore)
-	}
+	})
 
 	return services.SessionStore
 }
 
+var authorizationStoreOnce sync.Once
+
 func NewAuthorizationStore() auth.AuthorizationStore {
-	if services.AuthorizationStore == nil {
+	authorizationStoreOnce.Do(func() {
 		services.AuthorizationStore = infrastructure.NewAuthorizationStore(NewUserRepository(), NewRoleRepository())
-	}
+	})
 
 	return services.AuthorizationStore
 }

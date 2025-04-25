@@ -3,17 +3,22 @@ package web
 import (
 	"context"
 	"net/http"
+	"os"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/piksar-eu/webapp/apps/core/pkg/shared"
 )
 
+var sessionStoreOnce sync.Once
 var sessionStore SessionStore
 
 func SessionMiddleware(store SessionStore) func(next http.Handler) http.Handler {
 
-	sessionStore = store
+	sessionStoreOnce.Do(func() {
+		sessionStore = store
+	})
 
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -38,6 +43,7 @@ func SessionMiddleware(store SessionStore) func(next http.Handler) http.Handler 
 					Value:   session.Id,
 					Expires: session.ExpiresAt,
 					Path:    "/",
+					Domain:  os.Getenv("SESSION_COOKIE_DOMAIN"),
 				})
 			}
 
@@ -63,7 +69,7 @@ func createSession() *Session {
 	return &Session{
 		Id:        uuid.New().String(),
 		CreatedAt: createdAt,
-		ExpiresAt: createdAt.Add(24 * time.Hour),
+		ExpiresAt: createdAt.Add(60 * 24 * time.Hour),
 	}
 }
 
@@ -71,7 +77,7 @@ type Session struct {
 	Id        string
 	CreatedAt time.Time
 	ExpiresAt time.Time
-	Data      map[string]interface{}
+	Data      *sync.Map
 }
 
 type SessionStore interface {
@@ -93,30 +99,33 @@ func (s *SessionContext) Id() string {
 
 func (s *SessionContext) Add(key string, val interface{}) {
 	if s.session.Data == nil {
-		s.session.Data = make(map[string]interface{})
+		s.session.Data = &sync.Map{}
 	}
-
-	s.session.Data[key] = val
-
+	s.session.Data.Store(key, val)
 	sessionStore.Save(s.session)
 }
 
 func (s *SessionContext) Get(key string) interface{} {
-	val, ok := s.session.Data[key]
-
+	if s.session.Data == nil {
+		return nil
+	}
+	val, ok := s.session.Data.Load(key)
 	if !ok {
 		return nil
 	}
-
 	return val
 }
 
 func (s *SessionContext) Del(keys ...string) {
+	if s.session.Data == nil {
+		return
+	}
+
 	keyExists := false
 	for _, key := range keys {
-		if _, ok := s.session.Data[key]; ok {
+		if _, ok := s.session.Data.Load(key); ok {
+			s.session.Data.Delete(key)
 			keyExists = true
-			delete(s.session.Data, key)
 		}
 	}
 
@@ -138,6 +147,11 @@ func SessionCtx(r *http.Request) *SessionContext {
 
 func GetSessionUser(r *http.Request) *shared.SessionUser {
 	sessCtx := SessionCtx(r)
+
+	if sessCtx == nil {
+		return nil
+	}
+
 	user := sessCtx.Get("user")
 
 	sessionUser := &shared.SessionUser{}

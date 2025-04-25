@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 
 	"rogchap.com/v8go"
 )
@@ -17,24 +18,28 @@ import (
 //go:embed static/*
 var static embed.FS
 var isolatePool = make(map[string]isoPool, 2)
-var cache = make(map[string]string)
+var mu sync.RWMutex
+var cache = &sync.Map{}
 
 func prepare(app string) {
 	serverEntry, err := static.ReadFile(fmt.Sprintf("static/%s/server/entry-server.js", app))
 	if err != nil {
 		log.Panicln("entry-server.js does not exist", err)
 	}
-	cache[fmt.Sprintf("%s:serverEntryContent", app)] = string(serverEntry)
+
+	cache.Store(fmt.Sprintf("%s:serverEntryContent", app), string(serverEntry))
 
 	indexHTML, err := static.ReadFile(fmt.Sprintf("static/%s/client/index.html", app))
 	if err != nil {
 		log.Panicln("index.html does not exist", err)
 	}
-	cache[fmt.Sprintf("%s:indexHTMLContent", app)] = string(indexHTML)
+	cache.Store(fmt.Sprintf("%s:indexHTMLContent", app), string(indexHTML))
 
+	mu.Lock()
 	isolatePool[app] = isoPool{
 		pool: make(chan isoCtx, 10),
 	}
+	mu.Unlock()
 }
 
 func ServeUi(mux *http.ServeMux, app string, uFn GetUserJson) {
@@ -45,14 +50,17 @@ func ServeUi(mux *http.ServeMux, app string, uFn GetUserJson) {
 		if r.RequestURI != "/" && fileExists(filepath) {
 			if strings.HasPrefix(r.RequestURI, "/assets/index-") && strings.HasSuffix(r.RequestURI, ".js") {
 				cacheKey := fmt.Sprintf("%s:%s", app, r.RequestURI)
-				if _, ok := cache[cacheKey]; !ok {
+
+				if _, ok := cache.Load(cacheKey); !ok {
 					content, _ := static.ReadFile(filepath)
-					cache[cacheKey] = replaceViteEnv(string(content))
+					cache.Store(cacheKey, replaceViteEnv(string(content)))
 				}
+
+				val, _ := cache.Load(cacheKey)
 
 				w.Header().Set("Content-Type", "application/javascript")
 				w.WriteHeader(200)
-				w.Write([]byte(cache[cacheKey]))
+				w.Write([]byte(val.(string)))
 				return
 			}
 
@@ -62,8 +70,10 @@ func ServeUi(mux *http.ServeMux, app string, uFn GetUserJson) {
 			return
 		}
 
+		mu.RLock()
 		ip := isolatePool[app]
 		ic := ip.Get(app)
+		mu.RUnlock()
 
 		u := uFn(r)
 
@@ -81,7 +91,9 @@ func ServeUi(mux *http.ServeMux, app string, uFn GetUserJson) {
 			log.Panicln("Can not parse ssr result", err)
 		}
 
-		finalHTML := strings.Replace(cache[fmt.Sprintf("%s:indexHTMLContent", app)], "<!--app-head-->", result["head"], 1)
+		indexHTML, _ := cache.Load(fmt.Sprintf("%s:indexHTMLContent", app))
+
+		finalHTML := strings.Replace(indexHTML.(string), "<!--app-head-->", result["head"], 1)
 		finalHTML = strings.Replace(finalHTML, "<!--app-html-->", result["html"], 1)
 
 		if u != "" {
@@ -138,7 +150,9 @@ func (i *isoPool) Get(app string) isoCtx {
 		iso := v8go.NewIsolate()
 		ctx := v8go.NewContext(iso)
 
-		script, err := iso.CompileUnboundScript(cache[fmt.Sprintf("%s:serverEntryContent", app)], "entry-server.js", v8go.CompileOptions{})
+		serverEntryContent, _ := cache.Load(fmt.Sprintf("%s:serverEntryContent", app))
+
+		script, err := iso.CompileUnboundScript(serverEntryContent.(string), "entry-server.js", v8go.CompileOptions{})
 		if err != nil {
 			log.Panicln("Can not compile entry-server.js", err)
 		}

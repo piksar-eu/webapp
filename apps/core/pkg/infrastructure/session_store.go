@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/piksar-eu/webapp/apps/core/pkg/shared"
 	"github.com/piksar-eu/webapp/apps/core/pkg/web"
 )
 
@@ -73,7 +74,7 @@ func (s *pgSessionStore) Get(sessionID string) (*web.Session, error) {
 		return nil, err
 	}
 
-	var data map[string]interface{}
+	var data *sync.Map
 	err = json.Unmarshal([]byte(dataJSON), &data)
 	if err != nil {
 		return nil, errors.New("can not unmarshal session data")
@@ -88,7 +89,7 @@ func (s *pgSessionStore) Get(sessionID string) (*web.Session, error) {
 }
 
 func (s *pgSessionStore) Save(session *web.Session) error {
-	dataJSON, err := json.Marshal(session.Data)
+	dataJSON, err := json.Marshal(shared.SyncMapToMap(session.Data))
 	if err != nil {
 		return fmt.Errorf("session data can not be marschal")
 	}
