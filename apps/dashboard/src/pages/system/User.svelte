@@ -3,7 +3,7 @@
 	import Layout from "../../components/Layout.svelte";
 	import { getUser, getRoles, saveUser as saveUserApiCall } from "../../api";
     import { onMount } from "svelte";
-    import { link, navigate } from "svelte-routing";
+    import { link, navigate } from "svelte5-router";
     import { alert } from "../../shared";
 
 	let { id } = $props();

@@ -2,7 +2,7 @@
 	import Breadcrumbs from "../../components/Breadcrumbs.svelte";
 	import Layout from "../../components/Layout.svelte";
 	import { getRoles, deleteRole as deleteRoleApiCall } from "../../api";
-    import { link } from "svelte-routing"; 
+    import { link } from "svelte5-router"; 
     import { onMount } from "svelte";
 	import { alert } from '../../shared';
 

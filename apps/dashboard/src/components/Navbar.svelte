@@ -1,5 +1,5 @@
 <script>
-	import { link } from "svelte-routing";
+	import { link } from "svelte5-router";
 	import { user } from '../shared';
     import { logout as logoutApiCall } from "../api";
 

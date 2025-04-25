@@ -1,9 +1,8 @@
 <script>
-    import { Link } from "svelte-routing";
+    import { link, navigate } from "svelte5-router";
     import { loginInit as loginInitApiCall, loginSRP as loginSRPApiCall } from '../../api';
     import { srpClient } from './srp-client';
     import { onMount } from "svelte";
-    import { navigate } from "svelte-routing";
 	import { alert, user } from '../../store';
     import Alert from "../../components/Alert.svelte";
 
@@ -92,7 +91,7 @@
             <input type="email" required bind:this={emailInput} placeholder="Twój email" on:input={validateEmail}>
             <button type="submit" class="button" disabled={!isEmailValid}>Dalej</button>
 
-            <p> Nie masz jeszcze konta?  <Link class="secondary" to="/auth/register">Zarejestruj się!</Link></p>
+            <p> Nie masz jeszcze konta?  <a class="secondary" use:link href="/auth/register">Zarejestruj się!</a></p>
         </form>
     {:else}
         <form on:submit={loginSRP}>
@@ -100,7 +99,7 @@
             <input type="password" required bind:this={passwordInput} placeholder="Hasło" minlength="4" on:input={validatePassword}>
             <button type="submit" class="button" disabled={!isPasswordValid}>Zaloguj się</button>
 
-            <p> Nie masz jeszcze konta?  <Link class="secondary" to="/auth/register">Zarejestruj się!</Link></p>
+            <p> Nie masz jeszcze konta?  <a class="secondary" use:link href="/auth/register">Zarejestruj się!</a></p>
         </form>
     {/if}
 </div>

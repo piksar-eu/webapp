@@ -1,5 +1,5 @@
 <script>
-	import { Router, Route } from "svelte-routing";
+	import { Router, Route } from "svelte5-router";
 	import About from "./pages/About.svelte";
 	import Contact from "./pages/Contact.svelte";
 	import E404 from "./pages/E404.svelte";

@@ -1,5 +1,5 @@
 <script>
-	import { link } from "svelte-routing";
+	import { link } from "svelte5-router";
     import Navbar from "./Navbar.svelte";
     import { can, nav as navState } from "../shared"
     import Alert from "./Alert.svelte";

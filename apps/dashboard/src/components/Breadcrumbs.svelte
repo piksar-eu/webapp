@@ -1,5 +1,5 @@
 <script>
-    import { link } from "svelte-routing";
+    import { link } from "svelte5-router";
 
     let { items } = $props();
 </script>

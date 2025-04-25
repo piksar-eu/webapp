@@ -1,9 +1,8 @@
 <script>
     import { register as registerApiCall } from '../../api';
-    import { Link } from "svelte-routing";
+    import { link, navigate } from "svelte5-router";
     import { srpClient } from './srp-client';
     import { onMount } from "svelte";
-    import { navigate } from "svelte-routing";
     import { alert } from '../../store';
     import Alert from '../../components/Alert.svelte';
 
@@ -53,7 +52,7 @@
         <input type="email" name="email" required placeholder="Twój email" bind:this={emailInput} on:input={validate}>
         <input type="password" name="password" required  placeholder="Hasło" bind:this={passwordInput} on:input={validate}>
         <button type="submit" class="button" disabled={!isValid}>Zarejestruj</button>
-        <p> Masz już konto? <Link class="secondary" to="/auth/login">Zaloguj się!</Link></p>
+        <p> Masz już konto? <a class="secondary" use:link href="/auth/login">Zaloguj się!</a></p>
     </form>
 </div>
 

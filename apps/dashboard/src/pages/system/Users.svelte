@@ -2,7 +2,7 @@
 	import Breadcrumbs from "../../components/Breadcrumbs.svelte";
 	import Layout from "../../components/Layout.svelte";
 	import { getUsers, getRoles } from "../../api";
-    import { link } from "svelte-routing";
+    import { link } from "svelte5-router";
     import { onMount } from "svelte";
 
 	let roles = $state([])

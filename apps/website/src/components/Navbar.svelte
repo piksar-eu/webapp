@@ -1,5 +1,5 @@
 <script>
-    import { Link } from "svelte-routing";
+    import { link } from "svelte5-router";
 	import { user } from '../store';
     import { logout as logoutApiCall } from "../api";
 
@@ -11,9 +11,9 @@
 
 <nav class="nav">
     <ul class="nav__menu">
-        <li><Link to="/"><img src="/website.png" alt="logo" height="48"/></Link></li>
-        <li><Link to="/o-nas">O nas</Link></li>
-        <li><Link to="/kontakt">Kontakt</Link></li>
+        <li><a use:link href="/"><img src="/website.png" alt="logo" height="48"/></a></li>
+        <li><a use:link href="/o-nas">O nas</a></li>
+        <li><a use:link href="/kontakt">Kontakt</a></li>
 
         {#if $user !== undefined}
             <li><a href="#" on:click={logout}>Wyloguj</a></li>

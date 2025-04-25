@@ -1,5 +1,5 @@
 <script>
-    import { Link } from "svelte-routing";
+    import { link } from "svelte5-router";
     let { page, main, style = 'light' } = $props();
 
 </script>
@@ -7,7 +7,7 @@
     <header>
         <h3>{page.name}</h3>
         {#if page?.href}
-            <Link class="button button--sm" to={page.href}>więcej</Link>
+            <a class="button button--sm" use:link href={page.href}>więcej</a>
         {/if}
     </header>
 

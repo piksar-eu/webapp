@@ -22,7 +22,7 @@
     "leaflet": "^1.9.4",
     "sass-embedded": "^1.83.0",
     "svelte": "^5.2.9",
-    "svelte-routing": "^2.13.0",
+    "svelte5-router": "^3.0.2",
     "vite": "^6.0.1"
   }
 }
