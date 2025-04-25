@@ -48,3 +48,9 @@ core_build: $(CORE_DIR)/**/*.go website_build dashboard_build
 clean:
 	rm -rf $(OUTPUT_DIR) && \
 	rm -rf $(WEBSITE_DIR)/dist
+
+docker_start:
+	docker compose -f .docker/docker-compose.yml up -d
+
+docker_stop:
+	docker compose -f .docker/docker-compose.yml down

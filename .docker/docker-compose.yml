@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_PASSWORD=asd123
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - $PWD/.docker/mnt/postgres/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8070:8080
