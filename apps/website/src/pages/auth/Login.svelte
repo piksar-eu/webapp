@@ -1,9 +1,9 @@
 <script>
     import { link, navigate } from "svelte5-router";
     import { loginInit as loginInitApiCall, loginSRP as loginSRPApiCall } from '../../api';
-    import { srpClient } from './srp-client';
+    import { srpClient, redirectUrl } from './shared';
     import { onMount } from "svelte";
-	import { alert, user } from '../../store';
+	import { alert, user, isLoggedIn } from '../../shared';
     import Alert from "../../components/Alert.svelte";
 
 	let emailInput;
@@ -14,9 +14,26 @@
     let isEmailValid, isPasswordValid = false;
 
     onMount(() => {
+        if (isLoggedIn()) {
+            redirectIfLoggedIn()
+        }
+
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get("redirect")) {
+            redirectUrl.set(params.get("redirect"))
+        }
+
         emailInput?.focus();
     });
     
+    const redirectIfLoggedIn = () => {
+        if (import.meta.env.SSR) {
+            return
+        }
+        navigate($redirectUrl, { replace: true });
+	}
+
     const validateEmail = () => {
         isEmailValid = emailInput?.reportValidity();
 	}
@@ -77,7 +94,7 @@
             );
 
             user.set(r["user"]);
-            navigate("/", { replace: true });
+            redirectIfLoggedIn()
         } catch (e) {
             alert.set({type: "error", msg: "Błąd podczas logowania"});
         }

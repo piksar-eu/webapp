@@ -1,5 +1,5 @@
 <script>
-    import { Link } from "svelte-routing";
+    import { link } from "svelte5-router";
     import { subscribe as subscribeApiCall } from "../api.js"
 
     let emailInput;
@@ -33,7 +33,7 @@
             <div class="newsletter__subscription_msg error">Podczas zapisu wystąpił błąd. Spróbuj ponownie.</div>
         { /if }
     { /if }
-    <div class="newsletter__terms">Klikając „Zapisz się”, wyrażasz zgodę na przetwarzanie Twojego adresu e-mail w celu otrzymywania naszego newslettera zgodnie z&nbsp;<Link to="/polityka-prywatnosci">Polityką&nbsp;Prywatności</Link>.</div>
+    <div class="newsletter__terms">Klikając „Zapisz się”, wyrażasz zgodę na przetwarzanie Twojego adresu e-mail w celu otrzymywania naszego newslettera zgodnie z&nbsp;<a use:link href="/polityka-prywatnosci">Polityką&nbsp;Prywatności</a>.</div>
 </div>
 
 <style lang="scss">

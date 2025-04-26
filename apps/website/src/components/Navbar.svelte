@@ -1,6 +1,6 @@
 <script>
     import { link } from "svelte5-router";
-	import { user } from '../store';
+	import { user } from '../shared';
     import { logout as logoutApiCall } from "../api";
 
     const logout = async () => {

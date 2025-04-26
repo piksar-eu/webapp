@@ -1,5 +1,5 @@
 <script>
-    import { alert } from '../store';
+    import { alert } from '../shared';
 
     let a;
 

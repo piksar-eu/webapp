@@ -1,9 +1,9 @@
 <script>
     import { register as registerApiCall } from '../../api';
     import { link, navigate } from "svelte5-router";
-    import { srpClient } from './srp-client';
+    import { srpClient } from './shared';
     import { onMount } from "svelte";
-    import { alert } from '../../store';
+    import { alert, isLoggedIn } from '../../shared';
     import Alert from '../../components/Alert.svelte';
 
     let emailInput, passwordInput;
@@ -14,6 +14,10 @@
     }
 
      onMount(() => {
+        if (isLoggedIn()) {
+            navigate("/", { replace: true });
+        }
+
         emailInput?.focus();
     });
 

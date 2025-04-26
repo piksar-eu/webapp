@@ -1,3 +1,5 @@
+import { writable } from 'svelte/store';
+
 let _srpClient;
 
 /**
@@ -12,4 +14,6 @@ const srpClient = async () => {
     return _srpClient
 }
 
-export { srpClient }
+const redirectUrl = writable("/");
+
+export { srpClient, redirectUrl }
