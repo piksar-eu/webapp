@@ -13,6 +13,7 @@ import (
 	"github.com/piksar-eu/webapp/apps/core/pkg/easyconnect"
 	_ "github.com/piksar-eu/webapp/apps/core/pkg/envloader"
 	"github.com/piksar-eu/webapp/apps/core/pkg/migrations"
+	"github.com/piksar-eu/webapp/apps/core/pkg/traefik_auth"
 	"github.com/piksar-eu/webapp/apps/core/pkg/web"
 )
 
@@ -36,9 +37,11 @@ func serveApi() {
 
 	easyconnectModule := easyconnect.LoadModule(di.NewLeadRepository(), di.NewAuthorizationStore())
 	authModule := auth.LoadModule(di.NewUserRepository(), di.NewRoleRepository(), di.NewAuthorizationStore())
+	traefikAuth := traefik_auth.LoadModule(di.NewAuthorizationStore())
 
 	easyconnectModule.ServeApi(mux)
 	authModule.ServeApi(mux)
+	traefikAuth.ServeApi(mux)
 
 	var handler http.Handler = mux
 	handler = web.CorsMiddleware(handler)
