@@ -1,8 +1,11 @@
 package easyconnect
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
+
+	"github.com/piksar-eu/webapp/apps/core/pkg/easyconnect/public"
 )
 
 func (m *Module) ServeApi(mux *http.ServeMux) {
@@ -19,8 +22,7 @@ func (m *Module) ServeApi(mux *http.ServeMux) {
 			return
 		}
 
-		subscribe := SubscribeFn(m.leadRepo)
-		err = subscribe(req.Email)
+		_, err = m.commandBus.Dispatch(context.Background(), public.NewCreateLeadCommand(req.Email, "newsletter", true))
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

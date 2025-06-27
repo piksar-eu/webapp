@@ -9,7 +9,9 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/piksar-eu/webapp/apps/core/internal"
 	"github.com/piksar-eu/webapp/apps/core/pkg/auth"
+	"github.com/piksar-eu/webapp/apps/core/pkg/command"
 	"github.com/piksar-eu/webapp/apps/core/pkg/easyconnect"
+	"github.com/piksar-eu/webapp/apps/core/pkg/events"
 	"github.com/piksar-eu/webapp/apps/core/pkg/web"
 )
 
@@ -20,6 +22,8 @@ var services = struct {
 	UserRepository     auth.UserRepository
 	RoleRepository     auth.RoleRepository
 	AuthorizationStore auth.AuthorizationStore
+	CommandBus         *command.CommandBus
+	EventPublisher     events.EventPublisher
 }{}
 
 var dbOnce sync.Once
@@ -36,6 +40,16 @@ func NewDb() *sql.DB {
 	})
 
 	return services.DB
+}
+
+var commandbusOnce sync.Once
+
+func NewCommandBus() *command.CommandBus {
+	commandbusOnce.Do(func() {
+		services.CommandBus = command.NewCommandBus()
+	})
+
+	return services.CommandBus
 }
 
 var leadRepositoryOnce sync.Once
@@ -87,4 +101,14 @@ func NewAuthorizationStore() auth.AuthorizationStore {
 	})
 
 	return services.AuthorizationStore
+}
+
+var eventPublisherOnce sync.Once
+
+func NewEventPublisher() events.EventPublisher {
+	eventPublisherOnce.Do(func() {
+		services.EventPublisher = internal.NewSyncEventPublisher()
+	})
+
+	return services.EventPublisher
 }

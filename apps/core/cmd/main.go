@@ -35,7 +35,7 @@ func serveApi() {
 
 	mux := http.NewServeMux()
 
-	easyconnectModule := easyconnect.LoadModule(di.NewLeadRepository(), di.NewAuthorizationStore())
+	easyconnectModule := easyconnect.LoadModule(di.NewLeadRepository(), di.NewAuthorizationStore(), di.NewCommandBus(), di.NewEventPublisher())
 	authModule := auth.LoadModule(di.NewUserRepository(), di.NewRoleRepository(), di.NewAuthorizationStore())
 	traefikAuth := traefik_auth.LoadModule(di.NewAuthorizationStore())
 
