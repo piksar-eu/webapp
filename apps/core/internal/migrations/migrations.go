@@ -3,7 +3,7 @@ package migrations
 import (
 	"log"
 
-	"github.com/piksar-eu/webapp/apps/core/pkg/di"
+	"github.com/piksar-eu/webapp/apps/core/internal/di"
 )
 
 type Migration struct {

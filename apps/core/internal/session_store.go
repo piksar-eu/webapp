@@ -1,4 +1,4 @@
-package infrastructure
+package internal
 
 import (
 	"database/sql"
@@ -74,10 +74,15 @@ func (s *pgSessionStore) Get(sessionID string) (*web.Session, error) {
 		return nil, err
 	}
 
-	var data *sync.Map
-	err = json.Unmarshal([]byte(dataJSON), &data)
+	var tempMap map[string]interface{}
+	err = json.Unmarshal([]byte(dataJSON), &tempMap)
 	if err != nil {
 		return nil, errors.New("can not unmarshal session data")
+	}
+
+	data := &sync.Map{}
+	for k, v := range tempMap {
+		data.Store(k, v)
 	}
 
 	return &web.Session{

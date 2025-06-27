@@ -1,7 +1,7 @@
 package migrations
 
 import (
-	"github.com/piksar-eu/webapp/apps/core/pkg/di"
+	"github.com/piksar-eu/webapp/apps/core/internal/di"
 )
 
 func m202501041719_init() Migration {

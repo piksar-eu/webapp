@@ -7,9 +7,9 @@ import (
 	"sync"
 
 	_ "github.com/lib/pq"
+	"github.com/piksar-eu/webapp/apps/core/internal"
 	"github.com/piksar-eu/webapp/apps/core/pkg/auth"
 	"github.com/piksar-eu/webapp/apps/core/pkg/easyconnect"
-	"github.com/piksar-eu/webapp/apps/core/pkg/infrastructure"
 	"github.com/piksar-eu/webapp/apps/core/pkg/web"
 )
 
@@ -42,7 +42,7 @@ var leadRepositoryOnce sync.Once
 
 func NewLeadRepository() easyconnect.LeadRepository {
 	leadRepositoryOnce.Do(func() {
-		services.LeadRepository = infrastructure.NewPgEasyConnectLeadRepository(NewDb())
+		services.LeadRepository = internal.NewPgEasyConnectLeadRepository(NewDb())
 	})
 
 	return services.LeadRepository
@@ -52,7 +52,7 @@ var userRepositoryOnce sync.Once
 
 func NewUserRepository() auth.UserRepository {
 	userRepositoryOnce.Do(func() {
-		services.UserRepository = infrastructure.NewPgAuthUserRepository(NewDb())
+		services.UserRepository = internal.NewPgAuthUserRepository(NewDb())
 	})
 
 	return services.UserRepository
@@ -62,7 +62,7 @@ var roleRepositoryOnce sync.Once
 
 func NewRoleRepository() auth.RoleRepository {
 	roleRepositoryOnce.Do(func() {
-		services.RoleRepository = infrastructure.NewPgAuthRoleRepository(NewDb())
+		services.RoleRepository = internal.NewPgAuthRoleRepository(NewDb())
 	})
 
 	return services.RoleRepository
@@ -72,8 +72,8 @@ var sessionStoreOnce sync.Once
 
 func NewSessionStore() web.SessionStore {
 	sessionStoreOnce.Do(func() {
-		pgSessionStore := infrastructure.NewPgSessionStore(NewDb())
-		services.SessionStore = infrastructure.NewCachedSessionStore(pgSessionStore)
+		pgSessionStore := internal.NewPgSessionStore(NewDb())
+		services.SessionStore = internal.NewCachedSessionStore(pgSessionStore)
 	})
 
 	return services.SessionStore
@@ -83,7 +83,7 @@ var authorizationStoreOnce sync.Once
 
 func NewAuthorizationStore() auth.AuthorizationStore {
 	authorizationStoreOnce.Do(func() {
-		services.AuthorizationStore = infrastructure.NewAuthorizationStore(NewUserRepository(), NewRoleRepository())
+		services.AuthorizationStore = internal.NewAuthorizationStore(NewUserRepository(), NewRoleRepository())
 	})
 
 	return services.AuthorizationStore

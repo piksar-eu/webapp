@@ -8,11 +8,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/piksar-eu/webapp/apps/core/internal/di"
+	"github.com/piksar-eu/webapp/apps/core/internal/migrations"
 	"github.com/piksar-eu/webapp/apps/core/pkg/auth"
-	"github.com/piksar-eu/webapp/apps/core/pkg/di"
 	"github.com/piksar-eu/webapp/apps/core/pkg/easyconnect"
 	_ "github.com/piksar-eu/webapp/apps/core/pkg/envloader"
-	"github.com/piksar-eu/webapp/apps/core/pkg/migrations"
 	"github.com/piksar-eu/webapp/apps/core/pkg/traefik_auth"
 	"github.com/piksar-eu/webapp/apps/core/pkg/web"
 )
