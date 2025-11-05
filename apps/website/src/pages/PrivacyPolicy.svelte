@@ -3,63 +3,113 @@
 </script>
 
 <Subpage header="Polityka prywatności">
-    <img src="/privacy-policy-5238387_640.jpg" alt="policy"/>
-    <h2>1. Informacje ogólne</h2>
-    <p>Niniejsza Polityka Prywatności określa zasady przetwarzania i ochrony danych osobowych przekazanych przez Użytkowników w związku z korzystaniem przez nich z usług [NAZWA FIRMY/STRONY INTERNETOWEJ] (dalej jako "Serwis").</p>
-    <h2>2. Administrator danych osobowych</h2>
-    <p>Administratorem danych osobowych zawartych w Serwisie jest [NAZWA FIRMY] z siedzibą w [ADRES], NIP: [NUMER NIP], REGON: [NUMER REGON], e-mail: [ADRES E-MAIL], tel.: [NUMER TELEFONU] (dalej jako "Administrator").</p>
-    <h2>3. Inspektor Ochrony Danych</h2>
-    <p>[OPCJONALNIE - JEŚLI ZOSTAŁ POWOŁANY] Administrator wyznaczył Inspektora Ochrony Danych, z którym można się skontaktować w sprawach związanych z ochroną danych osobowych pod adresem e-mail: [ADRES E-MAIL IOD] lub pisemnie na adres siedziby Administratora.</p>
-    <h2>4. Cele i podstawy przetwarzania danych osobowych</h2>
-    <p>Administrator przetwarza dane osobowe Użytkowników Serwisu w następujących celach:<br/>
-        a. Realizacja umowy o świadczenie usług drogą elektroniczną (art. 6 ust. 1 lit. b RODO)<br/>
-        b. Marketing własnych produktów lub usług Administratora (art. 6 ust. 1 lit. f RODO)<br/>
-        c. Analiza ruchu w Serwisie, prowadzenie statystyk (art. 6 ust. 1 lit. f RODO)<br/>
-        [DODAĆ INNE CELE SPECYFICZNE DLA DANEJ FIRMY/SERWISU]</p>
-    <h2>5. Okres przechowywania danych</h2>
-    <p>Dane osobowe Użytkowników będą przechowywane przez okres:<br/>
-        a. W przypadku realizacji umowy - przez czas jej trwania i do czasu upływu terminu przedawnienia roszczeń wynikających z tej umowy<br/>
-        b. W przypadku marketingu - do czasu wniesienia sprzeciwu wobec takiego przetwarzania<br/>
-        c. W przypadku analiz i statystyk - do czasu wniesienia sprzeciwu wobec takiego przetwarzania<br/>
-        [DODAĆ INNE OKRESY SPECYFICZNE DLA DANEJ FIRMY/SERWISU]</p>
-    <h2>6. Odbiorcy danych</h2>
-    <p>Odbiorcami danych osobowych Użytkowników mogą być:<br/>
-        a. Podmioty przetwarzające dane na zlecenie Administratora, np. dostawcy usług IT, agencje marketingowe<br/>
-        b. Podmioty uprawnione do uzyskania danych na podstawie obowiązującego prawa, np. sądy lub organy ścigania<br/>
-        [DODAĆ INNYCH ODBIORCÓW SPECYFICZNYCH DLA DANEJ FIRMY/SERWISU]</p>
-    <h2>7. Prawa Użytkowników</h2>
-    <p>Użytkownikom przysługują następujące prawa związane z przetwarzaniem danych
-        osobowych:<br/>
-        a. Prawo dostępu do swoich danych oraz otrzymania ich kopii<br/>
-        b. Prawo do sprostowania (poprawiania) swoich danych<br/>
-        c. Prawo do usunięcia danych<br/>
-        d. Prawo do ograniczenia przetwarzania danych<br/>
-        e. Prawo do wniesienia sprzeciwu wobec przetwarzania danych<br/>
-        f. Prawo do przenoszenia danych<br/>
-        g. Prawo do wniesienia skargi do organu nadzorczego (Prezes Urzędu Ochrony Danych Osobowych)</p>
-    <h2>8. Informacja o dobrowolności podania danych</h2>
-    <p>Podanie danych osobowych jest dobrowolne, ale może być niezbędne do korzystania z usług Serwisu lub realizacji umowy.</p>
-    <h2>9. Zautomatyzowane podejmowanie decyzji i profilowanie</h2>
-    <p>[JEŚLI DOTYCZY] W ramach Serwisu dane osobowe Użytkowników mogą być przetwarzane w sposób zautomatyzowany, w tym również w formie profilowania. Zautomatyzowane podejmowanie decyzji będzie odbywało się na zasadach [OPISAĆ ZASADY], a konsekwencje takiego przetwarzania będą [OPISAĆ KONSEKWENCJE].</p>
-    <h2>10. Pliki cookies</h2>
-    <p>Serwis używa plików cookies. Szczegółowe informacje na temat wykorzystywania plików cookies znajdują się w Polityce Cookies dostępnej [LINK DO POLITYKI COOKIES].</p>
-    <h2>11. Zabezpieczenie danych</h2>
-    <p>Administrator stosuje odpowiednie środki techniczne i organizacyjne zapewniające bezpieczeństwo przetwarzanych danych osobowych adekwatne do zagrożeń oraz kategorii danych objętych ochroną.</p>
-    <h2>12. Zmiany w Polityce Prywatności</h2>
-    <p>Administrator zastrzega sobie prawo do zmiany niniejszej Polityki Prywatności. O wszelkich zmianach Użytkownicy będą informowani poprzez publikację aktualizacji na stronie Serwisu.</p>
-    <h2>13. Kontakt</h2>
-    <p>W sprawach związanych z danymi osobowymi prosimy o kontakt pod adresem e-mail: [ADRES E-MAIL] lub telefonicznie: [NUMER TELEFONU]. Data ostatniej aktualizacji: [DATA]</p>
+    
+    <div class="container policy">
+        <p>Obowiązuje od: 11 czerwca 2025 r.</p>
+        <p>Niniejsza Polityka Prywatności opisuje sposób przetwarzania danych osobowych użytkowników odwiedzających witrynę pragmatyczny.dev</p>
+
+        <h5>§1 Definicje</h5>
+        <ol>
+        <li><strong>Administrator</strong> – Piksar Sp. z o.o. z siedzibą w Rzeszowie, Lwowska 6/115, wpisana do KRS pod numerem 871744, NIP: 5170411549.</li>
+        <li><strong>RODO</strong> – Rozporządzenie (UE) 2016/679 o ochronie danych osobowych.</li>
+        <li><strong>Dane osobowe</strong> – informacje pozwalające na identyfikację osoby fizycznej, bezpośrednio lub pośrednio.</li>
+        </ol>
+
+        <h5>§2 Kontakt z administratorem</h5>
+        <p>W sprawach związanych z przetwarzaniem danych osobowych można się kontaktować pod adresem e-mail: admin@piksar.eu lub listownie na adres siedziby Administratora.</p>
+
+        <h5>§3 Informacje ogólne</h5>
+        <ol>
+        <li>Administrator przetwarza dane zgodnie z obowiązującym prawem, w szczególności z RODO.</li>
+        <li>Dane są pozyskiwane bezpośrednio od użytkownika, np. poprzez kontakt lub zamówienie.</li>
+        <li>Podanie danych jest dobrowolne, ale może być konieczne do realizacji niektórych funkcjonalności strony.</li>
+        <li>Administrator nie podejmuje decyzji wyłącznie w sposób zautomatyzowany wywołujących skutki prawne. Może jednak prowadzić profilowanie w celach marketingowych – np. personalizując newslettery – tylko za zgodą użytkownika.</li>
+        </ol>
+
+        <h5>§4 Cele i podstawy prawne przetwarzania danych</h5>
+        <table style="margin: 20px 0; border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <th>Cel przetwarzania</th>
+                    <th>Opis</th>
+                    <th>Podstawa prawna</th>
+                    <th>Okres przechowywania</th>
+                </tr>
+                <tr>
+                    <td>Realizacja umowy</td>
+                    <td>Obsługa zamówień, kontakt związany z realizacją usług, działania zmierzające do zawarcia umowy.</td>
+                    <td>art. 6 ust. 1 lit. b RODO</td>
+                    <td>Do zakończenia umowy</td>
+                </tr>
+                <tr>
+                    <td>Kontakt i korespondencja</td>
+                    <td>Udzielanie odpowiedzi na zapytania użytkowników oraz utrzymanie kontaktu handlowego.</td>
+                    <td>art. 6 ust. 1 lit. f RODO</td>
+                    <td>Do 3 lat od ostatniego kontaktu lub do momentu skutecznego sprzeciwu</td>
+                </tr>
+                <tr>
+                    <td>Obsługa reklamacji i roszczeń</td>
+                    <td>Dochowanie należytej staranności w zakresie roszczeń i reklamacji.</td>
+                    <td>art. 6 ust. 1 lit. f RODO</td>
+                    <td>Do czasu przedawnienia roszczeń, maksymalnie 3 lata po zakończeniu współpracy</td>
+                </tr>
+                <tr>
+                    <td>Marketing własnych usług</td>
+                    <td>Wysyłanie informacji handlowych i ofert dostosowanych do zainteresowań użytkownika.</td>
+                    <td>art. 6 ust. 1 lit. a RODO (zgoda) oraz lit. f RODO</td>
+                    <td>Do momentu wycofania zgody lub wniesienia sprzeciwu</td>
+                </tr>
+                <tr>
+                    <td>Obowiązki prawne</td>
+                    <td>Wypełnianie obowiązków wynikających z przepisów prawa (np. księgowość, podatki).</td>
+                    <td>art. 6 ust. 1 lit. c RODO</td>
+                    <td>Zgodnie z odpowiednimi przepisami (np. 5 lat w przypadku dokumentów księgowych)</td>
+                </tr>
+                </tbody>
+        </table>
+
+        <h5>§5 Odbiorcy danych</h5>
+        <ol>
+        <li>Dane mogą być przekazywane podmiotom upoważnionym przepisami prawa.</li>
+        <li>Współpracujemy z zaufanymi partnerami, takimi jak firmy informatyczne, prawnicze, księgowe, pocztowe, kurierskie, windykacyjne.</li>
+        <li>Nie przekazujemy danych poza EOG, chyba że zapewnione są odpowiednie środki ochrony, zgodne z RODO.</li>
+        </ol>
+
+        <h5>§6 Prawa osób, których dane dotyczą</h5>
+        <p>Każdy, kogo dane są przetwarzane, ma prawo do:</p>
+        <ol>
+        <li>dostępu do swoich danych i otrzymania ich kopii,</li>
+        <li>sprostowania nieprawidłowych lub uzupełnienia niekompletnych danych,</li>
+        <li>usunięcia danych („prawo do bycia zapomnianym”),</li>
+        <li>ograniczenia przetwarzania danych,</li>
+        <li>przenoszenia danych do innego administratora,</li>
+        <li>wniesienia sprzeciwu wobec przetwarzania, w tym wobec marketingu bezpośredniego,</li>
+        <li>wycofania zgody (w dowolnym momencie),</li>
+        <li>wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych (ul. Stawki 2, 00-193 Warszawa).</li>
+        </ol>
+
+        <h5>§7 Dzieci</h5>
+        <p>Strona pragmatyczny.dev nie jest skierowana do dzieci, w szczególności poniżej 16. roku życia. Administrator nie zbiera świadomie danych dzieci.</p>
+    </div>
 </Subpage>
 
 <style lang="scss">
-    img {
-        max-width: 420px;
-        float: right;
-        padding-left: 8px;
-        padding-bottom: 8px;
+    h5 {
+        padding: 10px 0;
     }
 
-    p {
-        margin-bottom: 16px;
+    ol, ul {
+        margin: 0.5rem 0 0.5rem 1.3rem;
+
+        li {
+            padding-bottom: 0.3rem;
+        }
     }
+
+    table {
+        th, td {
+            padding: 0.3rem;
+        }
+    }
+
 </style>

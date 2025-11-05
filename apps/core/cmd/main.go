@@ -10,9 +10,11 @@ import (
 
 	"github.com/piksar-eu/webapp/apps/core/internal/di"
 	"github.com/piksar-eu/webapp/apps/core/internal/migrations"
+	"github.com/piksar-eu/webapp/apps/core/pkg/assistant"
 	"github.com/piksar-eu/webapp/apps/core/pkg/auth"
 	"github.com/piksar-eu/webapp/apps/core/pkg/easyconnect"
 	_ "github.com/piksar-eu/webapp/apps/core/pkg/envloader"
+	"github.com/piksar-eu/webapp/apps/core/pkg/matrix"
 	"github.com/piksar-eu/webapp/apps/core/pkg/traefik_auth"
 	"github.com/piksar-eu/webapp/apps/core/pkg/web"
 )
@@ -35,6 +37,8 @@ func serveApi() {
 
 	mux := http.NewServeMux()
 
+	_ = matrix.LoadModule(di.NewDb(), di.NewEventPublisher(), di.NewCommandBus())
+	_ = assistant.LoadModule(di.NewCommandBus())
 	easyconnectModule := easyconnect.LoadModule(di.NewLeadRepository(), di.NewAuthorizationStore(), di.NewCommandBus(), di.NewEventPublisher())
 	authModule := auth.LoadModule(di.NewUserRepository(), di.NewRoleRepository(), di.NewAuthorizationStore())
 	traefikAuth := traefik_auth.LoadModule(di.NewAuthorizationStore())

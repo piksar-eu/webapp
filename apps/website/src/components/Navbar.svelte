@@ -11,9 +11,9 @@
 
 <nav class="nav">
     <ul class="nav__menu">
-        <li><a use:link href="/"><img src="/website.png" alt="logo" height="48"/></a></li>
-        <li><a use:link href="/o-nas">O nas</a></li>
-        <li><a use:link href="/kontakt">Kontakt</a></li>
+        <li><a use:link href="/"><img src="/logo2.svg" alt="logo"/></a></li>
+        <li><a use:link href="/posty">Posty</a></li>
+        <!-- <li><a use:link href="/o-mnie">O mnie</a></li> -->
 
         {#if $user !== undefined}
             <li><a href="#" on:click={logout}>Wyloguj</a></li>
@@ -33,22 +33,26 @@
                 list-style: none;
                 display: block;
                 position: relative;
-                padding: 1rem 0;
+                padding: 0.5rem 0;
                 height: 4rem;
 
                 &:first-child {
                     margin-right: auto;
+
+                    img {
+                        height: 3rem;
+                    }
                 }
 
                 :global(a) {
                     color: inherit;
                     text-decoration: none;
-                    font-size: 1.0rem;
-                    line-height: 2rem;
+                    font-size: 1rem;
+                    line-height: 3rem;
                 }
 
                 :global(a img) {
-                    max-height: 2rem;
+                    max-height: 3rem;
                 }
             }
         }

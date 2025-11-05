@@ -4,7 +4,7 @@ import (
 	"github.com/piksar-eu/webapp/apps/core/pkg/events"
 )
 
-const LeadCreatedEvent = "easyconnect.:eadCreated"
+const LeadCreatedEvent = "easyconnect.leadCreated"
 
 type LeadCreatedPayload struct {
 	LeadId string `json:"leadId"`
