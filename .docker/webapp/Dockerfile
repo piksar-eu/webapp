@@ -14,7 +14,7 @@ COPY . .
 RUN make core_build
 
 # Runtime Step
-FROM arm64v8/debian:bookworm-slim
+FROM debian:stable-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
