@@ -22,7 +22,7 @@
     "leaflet": "^1.9.4",
     "sass-embedded": "^1.83.0",
     "svelte": "^5.2.9",
-    "svelte5-router": "github:capriolo/svelte5-router#223faf0",
+    "svelte5-router": "github:capriolo/svelte5-router#45af3a3",
     "vite": "^6.0.1"
   }
 }
