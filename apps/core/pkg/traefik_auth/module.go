@@ -12,6 +12,7 @@ import (
 const PermissionPanelView = "external_panel_view"
 const PermissionTraefikView = "external_traefik_view"
 const PermissionMemosView = "external_memos_view"
+const PermissionHermesView = "external_hermes_view"
 
 func LoadModule(authStore auth.AuthorizationStore) *Module {
 	m := &Module{
@@ -31,6 +32,7 @@ func (m *Module) load() {
 	m.authStore.RegisterPermission(auth.Permission{Id: PermissionPanelView, Name: "Can access panel.pragmatyczny.dev"})
 	m.authStore.RegisterPermission(auth.Permission{Id: PermissionTraefikView, Name: "Can access traefik.pragmatyczny.dev"})
 	m.authStore.RegisterPermission(auth.Permission{Id: PermissionMemosView, Name: "Can access memos.pragmatyczny.dev"})
+	m.authStore.RegisterPermission(auth.Permission{Id: PermissionHermesView, Name: "Can access hermes.pragmatyczny.dev"})
 }
 
 func (m *Module) ServeApi(mux *http.ServeMux) {
@@ -65,6 +67,8 @@ func hostPermission(host string) string {
 		return PermissionTraefikView
 	case "memos.pragmatyczny.dev":
 		return PermissionMemosView
+	case "hermes.pragmatyczny.dev":
+		return PermissionHermesView
 	default:
 		return ""
 	}
